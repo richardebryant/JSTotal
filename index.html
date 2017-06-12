@@ -1,0 +1,169 @@
+<!doctype html>
+
+<head>
+
+<title>Web Application</title>
+
+<!--
+
+  <link rel="stylesheet" href="styles.css">
+
+  <script type="javascript" src="scripts.js"></script>
+
+-->
+
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+
+</head>
+
+<body>
+
+    <div>
+        <div>
+            <h1>Enter both addends, and click Display Result</h1>
+        </div>
+        <div>
+            Enter First Number : <br>
+            <input type="text" id="txtNum1" name="txtNum1">
+            <br>
+            Enter Second Number : <br>
+            <input type="text" id="txtNum2" name="txtNum2">
+            <br>
+            Result : <br>
+            <input type="text" id="txtSum" name="txtSum">
+            <br>
+            <input type="button" name="clickButton" value="Display Result" onclick="sum()">
+        </div>
+    </div>
+
+    <div>
+        &nbsp;
+    </div>
+
+        <div>
+            <h1>Total displays upon exit of fields</h1>
+        </div>
+
+  <form id="form1" name="form1">
+
+    <div>
+      <table>
+        <tr>
+          <td style="width: 170px" align="right">
+              <Label for="currencyAmountOneTextBox" foreColor="Red" width="170px">Currency Amount One $:</Label>
+          </td>
+          <td style="width: 60px">
+              <input id="currencyAmountOneTextBox" width="60px" maxLength="13" onChange="updateCurrencyAmountSum();">
+          </td>
+          <td style="width: 170px" align="right">
+              <label for="quantityAmountOneTextBox" foreColor="Red" width="170px">Quantity Amount One:</Label>
+          </td>
+          <td style="width: 60px">
+              <input id="quantityAmountOneTextBox" width="60px" maxLength="13" onChange="updateQuantityAmountSum();">
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div>
+      <table>
+        <tr>
+          <td style="width: 170px" align="right">
+              <Label for="currencyAmountTwoTextBox" foreColor="Red" width="170px">Currency Amount Two $:</Label></td>
+          <td style="width: 60px">
+              <input id="currencyAmountTwoTextBox" width="60px" maxLength="13" onChange="updateCurrencyAmountSum();">
+          </td>
+          <td style="width: 170px" align="right">
+              <label for="quantityAmountTwoTextBox" foreColor="Red" width="170px">Quantity Amount Two:</Label>
+          </td>
+          <td style="width: 60px">
+              <input id="quantityAmountTwoTextBox" width="60px" maxLength="13" onChange="updateQuantityAmountSum();">
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div>
+      <table>
+        <tr>
+          <td style="width: 170px" align="right">
+              <Label for="totalCurrencyAmountTextBox" foreColor="Red" width="170px">Total Currency Amount $:</Label></td>
+          <td style="width: 60px">
+              <input id="totalCurrencyAmountTextBox" width="60px" maxLength="13" disabled>
+          </td>
+          <td style="width: 170px" align="right">
+              <label for="totalQuantityAmountTextBox" foreColor="Red" width="170px">Total Quantity Amount:</Label>
+          </td>
+          <td style="width: 60px">
+              <input id="totalQuantityAmountTextBox" width="60px" maxLength="13" disabled>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+</form>
+
+    <script type="text/javascript">
+        function sum(){
+          var txtFirstNumberValue = document.getElementById('txtNum1').value;
+          var txtSecondNumberValue = document.getElementById('txtNum2').value;
+          if (txtFirstNumberValue == '')
+            txtFirstNumberValue = 0;
+          if (txtSecondNumberValue == '')
+            txtSecondNumberValue = 0;
+          var result = parseInt(txtFirstNumberValue) + parseInt(txtSecondNumberValue);
+          if (!isNaN(result)) {
+            document.getElementById("txtSum").value = result;
+          }             
+        }
+    </script>
+
+
+<script language="javascript" type="text/javascript">
+
+    // Extend the default Number object with a formatMoney() method:
+    // usage: someVar.formatMoney(decimalPlaces, symbol, thousandsSeparator, decimalSeparator)
+    // defaults: (2, "$", ",", ".")
+    Number.prototype.formatMoney = function (places, symbol, thousand, decimal) {
+        places = !isNaN(places = Math.abs(places)) ? places : 2;
+        symbol = symbol !== undefined ? symbol : "$";
+        thousand = thousand || ",";
+        decimal = decimal || ".";
+        var number = this,
+            negative = number < 0 ? "-" : "",
+            i = parseInt(number = Math.abs(+number || 0).toFixed(places), 10) + "",
+            j = (j = i.length) > 3 ? j % 3 : 0;
+        //-version WITH $ prepended:    return symbol + negative + (j ? i.substr(0, j) + thousand : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousand) + (places ? decimal + Math.abs(number - i).toFixed(places).slice(2) : "");
+        return negative + (j ? i.substr(0, j) + thousand : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousand) + (places ? decimal + Math.abs(number - i).toFixed(places).slice(2) : "");
+    };
+
+    //// Extend the default Number object with a formatNumber() method:
+    //// usage: someVar.formatNumber()
+    Number.prototype.formatNumber = function () {
+        var number = this;
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    };
+
+    // This function is called if either CurrencyAmountOne or CurrencyAmountTwo fields are acted upon by the user...
+    // ...It sums the two values, and places the result into the Investment Total field.
+    function updateCurrencyAmountSum() {
+        document.form1.totalCurrencyAmountTextBox.value = ((document.form1.currencyAmountOneTextBox.value.replace(/,/g, '') - 0) + (document.form1.currencyAmountTwoTextBox.value.replace(/,/g, '') - 0)).formatMoney();
+    }
+
+    // This function is called if either QuantityAmountOne or QuantityAmountTwo fields are acted upon by the user...
+    // ...It sums the two values, and places the result into the QuantityAmountTotal field.
+    function updateQuantityAmountSum() {
+        document.form1.totalQuantityAmountTextBox.value = ((document.form1.quantityAmountOneTextBox.value.replace(/,/g, '') - 0) + (document.form1.quantityAmountTwoTextBox.value.replace(/,/g, '') - 0)).formatNumber();
+    }
+
+</script>
+
+  <!--
+    <script type="text/javascript" src="scripts.js"></script>
+  -->
+
+</body>
+
+</html>
